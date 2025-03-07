@@ -11,22 +11,25 @@
  */
 class Solution {
 public:
-    bool isCompleteTree(TreeNode* root) {
-        if(root==nullptr)
-        return true;
-        queue<TreeNode*> q{{root}};
-        while(q.front()!=nullptr)
-        {
-            TreeNode * node=q.front();
-            q.pop();
-            q.push(node->left);
-            q.push(node->right);
+    int count_nodes(TreeNode* root)
+    {
+        if(!root) return 0;
+        int l=count_nodes(root->left);
+        int r=count_nodes(root->right);
+        return l+r+1;
+    }
+    bool check(TreeNode* root, int ind,int n)
+    {
+        if(!root) return 1;
+        if(ind>=n) return 0;
 
-        }
-        while(!q.empty() && q.front()==nullptr)
-        {
-            q.pop();
-        }
-        return q.empty();
+        bool l=check(root->left,2*ind+1,n);
+        bool r=check(root->right,2*ind+2,n);
+        return l and r;
+    }
+    bool isCompleteTree(TreeNode* root) {
+        if(!root) return 1;
+        int n=count_nodes(root);
+        return check(root,0,n);
     }
 };
